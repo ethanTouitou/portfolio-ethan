@@ -1,22 +1,84 @@
+---
+import "../styles/global.css";
+
+const navLinks = [
+	{ label: "Accueil", href: "#hero" },
+	{ label: "Projets", href: "#projects" },
+	{ label: "Compétences", href: "#skills" },
+	{ label: "À propos", href: "#about" },
+	{ label: "Contact", href: "#contact" },
+];
+---
+
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>Ethan Touitou | Portfolio</title>
 	</head>
-	<body>
-		<slot />
+	<body class="bg-[#020817] text-white antialiased min-h-screen">
+		<header
+			class="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-black backdrop-blur-xl"
+		>
+			<div
+				class="mx-auto flex h-20 w-full max-w-6xl items-center justify-between px-6"
+			>
+				<a
+					href="#hero"
+					class="flex items-center gap-3 text-sm font-semibold tracking-wide"
+				>
+					<span
+						class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-base text-[#020817] font-bold"
+					>
+						ET
+					</span>
+					<span class="text-white/80">Ethan Touitou</span>
+				</a>
+
+				<nav
+					class="hidden items-center gap-8 text-sm text-white/70 md:flex"
+				>
+					{
+						navLinks.map((link) => (
+							<a
+								href={link.href}
+								class="transition hover:text-white"
+							>
+								{link.label}
+							</a>
+						))
+					}
+				</nav>
+
+				<a
+					href="/cv.pdf"
+					class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-[#020817] transition hover:bg-emerald-400"
+				>
+					<svg
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+						class="text-[#020817]"
+					>
+						<path
+							d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"
+							stroke="currentColor"
+							stroke-width="1.8"
+							stroke-linecap="round"
+							stroke-linejoin="round"></path>
+					</svg>
+					<span>CV</span>
+				</a>
+			</div>
+		</header>
+
+		<main class="pt-24">
+			<slot />
+		</main>
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

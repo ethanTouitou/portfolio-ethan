@@ -1,0 +1,338 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { defaultPbUrl, fetchProjects } from "../lib/pocketbase";
+
+const pbUrl = defaultPbUrl;
+
+const projects = await fetchProjects(pbUrl, 10);
+
+const [heroProject, ...otherProjects] = projects;
+
+const coverUrl = heroProject.coverUrl ?? null;
+const featureImg1 = heroProject.featureImg1 ?? null;
+const featureImg2 = heroProject.featureImg2 ?? null;
+
+const splitStack = heroProject.tags && heroProject.tags.length
+	? heroProject.tags
+	: ["Astro", "TailwindCSS", "PocketBase"];
+---
+
+<Layout>
+	<section class="relative isolate overflow-hidden bg-[#0b1424] px-6 pb-20 pt-20 text-white">
+		<div class="pointer-events-none absolute inset-0 opacity-80">
+			<div class="absolute -left-24 top-6 h-80 w-80 rounded-full bg-emerald-500/14 blur-[170px]"></div>
+			<div class="absolute right-0 top-0 h-96 w-96 rounded-full bg-purple-500/22 blur-[190px]"></div>
+		</div>
+
+		<div class="relative mx-auto flex max-w-6xl flex-col items-center gap-12 lg:flex-row lg:items-center lg:justify-between">
+			<div class="max-w-xl space-y-6 text-left">
+				<h1 class="text-4xl font-semibold leading-tight sm:text-5xl">{heroProject.titre}</h1>
+				<p class="text-lg text-white/75 sm:text-xl">{heroProject.subtitle}</p>
+				<div class="flex flex-wrap gap-4">
+					<a
+						href="#features"
+						class="inline-flex items-center justify-center rounded-2xl bg-[#1dd4ff] px-6 py-3 text-sm font-semibold text-[#0a1020] transition hover:bg-[#52deff]"
+					>
+						Voir le projet
+					</a>
+					<a
+						href="#stack"
+						class="inline-flex items-center justify-center rounded-2xl border border-[#7656ff] px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/5"
+					>
+						Code source
+					</a>
+				</div>
+			</div>
+
+			<div class="relative w-full max-w-sm sm:max-w-md lg:max-w-lg">
+				<div class="absolute inset-[-14px] rounded-[28px] bg-purple-500/40 blur-3xl"></div>
+				<div class="relative overflow-hidden rounded-[18px] border border-white/10 bg-[#0b162d] p-2 shadow-[0_30px_90px_rgba(2,8,23,0.85)]">
+					{coverUrl ? (
+						<img
+							src={coverUrl}
+							alt={heroProject.titre}
+							class="h-full w-full rounded-[14px] object-contain"
+							style="max-height: 360px"
+						/>
+					) : (
+						<div class="flex min-h-[280px] items-center justify-center rounded-[14px] bg-[#0f1b33] text-white/50">
+							Visuel du projet
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="value" class="bg-[#111c32] px-6 py-16 text-white">
+		<div class="mx-auto max-w-6xl space-y-10">
+			<div class="text-center space-y-2">
+				<h2 class="text-3xl font-semibold sm:text-4xl">Le développement contextuel</h2>
+				<div class="mx-auto h-1 w-28 rounded-full bg-purple-500"></div>
+			</div>
+
+			<div class="grid gap-10 rounded-3xl bg-[#0f162a] p-8 shadow-[0_18px_60px_rgba(2,8,23,0.55)] md:grid-cols-2">
+				<div class="space-y-4">
+					<h3 class="text-lg font-semibold text-white">{heroProject.context_title ?? "Contexte du projet"}</h3>
+					<p class="text-sm text-white/70">{heroProject.context}</p>
+					<ul class="space-y-2 text-sm text-white/75">
+						<li class="flex items-start gap-2">
+							<span class="mt-[6px] h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+							Interface collaborative intuitive
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="mt-[6px] h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+							IA pour personnalisation des parcours
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="mt-[6px] h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+							Outils d'apprentissage avancés
+						</li>
+					</ul>
+				</div>
+
+				<div class="space-y-4">
+					<h3 class="text-lg font-semibold text-white">{heroProject.defis_title ?? "Défis techniques"}</h3>
+					<p class="text-sm text-white/70">{heroProject.defis}</p>
+					<ul class="space-y-2 text-sm text-white/75">
+						<li class="flex items-start gap-2">
+							<span class="mt-[6px] h-1.5 w-1.5 rounded-full bg-blue-400"></span>
+							Intégration IA en temps réel
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="mt-[6px] h-1.5 w-1.5 rounded-full bg-blue-400"></span>
+							Architecture collaborative scalable
+						</li>
+						<li class="flex items-start gap-2">
+							<span class="mt-[6px] h-1.5 w-1.5 rounded-full bg-blue-400"></span>
+							Interface multi-dispositifs optimisée
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="innovations" class="bg-[#0b1222] px-6 py-16 text-white">
+		<div class="mx-auto max-w-6xl space-y-10">
+			<div class="text-center space-y-2">
+				<h2 class="text-3xl font-semibold sm:text-4xl">Idées & Innovations</h2>
+				<div class="mx-auto h-1 w-24 rounded-full bg-purple-500"></div>
+			</div>
+
+			<div class="grid gap-6 md:grid-cols-3">
+				{[
+					{ label: "IA Personnalisée", text: heroProject.innovations_blocks ?? "IA qui adapte les parcours et optimise la rétention." },
+					{
+						label: "Collaboration Intelligente",
+						text: heroProject.innovations_blocks1 ?? "Système temps réel avec feedback instantané et gestion de projets."
+					},
+					{
+						label: "Expérience Immersive",
+						text: heroProject.innovations_blocks2 ?? "Interface intuitive avec gamification et suivi personnalisé."
+					}
+				].map((card, idx) => (
+					<div class="space-y-4 rounded-3xl border border-white/10 bg-[#182338] p-6 text-left shadow-[0_18px_60px_rgba(2,8,23,0.55)]">
+						<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/10 text-purple-200">
+							{idx === 0 ? "🧠" : idx === 1 ? "🤝" : "✨"}
+						</div>
+						<h3 class="text-base font-semibold text-white">{card.label}</h3>
+						<p class="text-sm text-white/75">{card.text}</p>
+					</div>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<section id="process" class="bg-[#141d32] px-6 py-16 text-white">
+		<div class="mx-auto grid max-w-6xl gap-6 md:grid-cols-2">
+			<div
+				class="space-y-3 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_20px_70px_rgba(2,8,23,0.7)]"
+			>
+				<h3 class="text-lg font-semibold text-white">
+					{
+						heroProject.creation_process_title ??
+							"Processus de création"
+					}
+				</h3>
+				<ul class="space-y-2 text-sm text-white/75">
+					{
+						[
+							heroProject.creation_process_steps,
+							heroProject.creation_process_steps2,
+							heroProject.creation_process_steps3,
+							heroProject.creation_process_steps4,
+							heroProject.creation_process_steps5,
+						]
+							.filter(Boolean)
+							.map((step) => (
+								<li class="flex items-start gap-2">
+									<span class="mt-[6px] h-1.5 w-1.5 rounded-full bg-blue-400" />
+									<span>{step}</span>
+								</li>
+							))
+					}
+				</ul>
+			</div>
+
+			<div
+				class="space-y-4 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_20px_70px_rgba(2,8,23,0.7)]"
+			>
+				<div>
+					<h3 class="text-lg font-semibold text-white" id="stack">
+						{heroProject.tech_stack_title ?? "Stack technologique"}
+					</h3>
+					<p class="mt-2 text-sm text-white/70">
+						{heroProject.tech_stack_description}
+					</p>
+				</div>
+				<div class="flex flex-wrap gap-2">
+					{
+						(splitStack.length
+							? splitStack
+							: [
+									"Astro",
+									"TailwindCSS",
+									"PocketBase",
+									"OpenAI",
+									"Supabase",
+								]
+						).map((tech) => (
+							<span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">
+								{tech}
+							</span>
+						))
+					}
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="features" class="bg-[#0b1428] px-6 py-16 text-white">
+		<div class="mx-auto max-w-6xl space-y-8">
+			<div class="space-y-3 text-center">
+				<h3 class="text-3xl font-semibold sm:text-4xl">
+					{heroProject.features_title ?? "Fonctionnalités clés"}
+				</h3>
+				<p class="text-base text-white/70">
+					{heroProject.features_long_text}
+				</p>
+			</div>
+
+			<div class="grid gap-6 lg:grid-cols-2">
+				<div
+					class="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_20px_70px_rgba(2,8,23,0.7)]"
+				>
+					<h4 class="text-lg font-semibold text-white">
+						Principales capacités
+					</h4>
+					<ul class="mt-4 space-y-2 text-sm text-white/75">
+						<li class="flex items-start gap-2">
+							<span
+								class="mt-[6px] h-1.5 w-1.5 rounded-full bg-emerald-400"
+							></span>
+							<span
+								>IA personnalisée pour adapter les parcours et
+								optimiser la rétention.</span
+							>
+						</li>
+						<li class="flex items-start gap-2">
+							<span
+								class="mt-[6px] h-1.5 w-1.5 rounded-full bg-emerald-400"
+							></span>
+							<span
+								>Collaboration temps réel avec feedback
+								instantané.</span
+							>
+						</li>
+						<li class="flex items-start gap-2">
+							<span
+								class="mt-[6px] h-1.5 w-1.5 rounded-full bg-emerald-400"
+							></span>
+							<span
+								>Expérience immersive, gamification et suivi
+								personnalisé.</span
+							>
+						</li>
+					</ul>
+				</div>
+
+				<div class="grid gap-4 sm:grid-cols-2">
+					{
+						featureImg1 && (
+							<div class="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-[0_20px_60px_rgba(2,8,23,0.7)]">
+								<img
+									src={featureImg1}
+									alt="feature"
+									class="h-full w-full object-cover"
+								/>
+							</div>
+						)
+					}
+					{
+						featureImg2 && (
+							<div class="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-[0_20px_60px_rgba(2,8,23,0.7)]">
+								<img
+									src={featureImg2}
+									alt="feature"
+									class="h-full w-full object-cover"
+								/>
+							</div>
+						)
+					}
+					{
+						!featureImg1 && !featureImg2 && (
+							<div class="col-span-2 flex min-h-[220px] items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white/50">
+								Visuels fonctionnalités
+							</div>
+						)
+					}
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{
+		otherProjects.length > 0 && (
+			<section class="bg-[#030b1e] px-6 py-16 text-white">
+				<div class="mx-auto max-w-6xl space-y-8">
+					<div class="space-y-2">
+						<h3 class="text-2xl font-semibold">Autres projets</h3>
+						<p class="text-sm text-white/70">
+							Encore plus de réalisations issues de PocketBase.
+						</p>
+					</div>
+
+					<div class="grid gap-6 md:grid-cols-3">
+						{otherProjects.map((proj) => {
+							const img = proj.coverUrl ?? null;
+							return (
+								<article class="group overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-[0_18px_50px_rgba(2,8,23,0.65)] transition hover:-translate-y-1">
+									{img ? (
+										<img
+											src={img}
+											alt={proj.titre}
+											class="h-40 w-full object-cover"
+										/>
+									) : (
+										<div class="flex h-40 items-center justify-center bg-[#0f192e] text-white/50">
+											Visuel
+										</div>
+									)}
+									<div class="space-y-2 p-4">
+										<h4 class="text-base font-semibold text-white">
+											{proj.titre}
+										</h4>
+										<p class="text-xs text-white/60 line-clamp-3">
+											{proj.subtitle}
+										</p>
+									</div>
+								</article>
+							);
+						})}
+					</div>
+				</div>
+			</section>
+		)
+	}
+</Layout>

@@ -1,11 +1,565 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import HeroImage from "../assets/ethantouitou.webp";
+import {
+	fetchCompetenceGroups,
+	fetchLatestProject,
+	defaultPbUrl,
+	ProjectWithAssets,
+} from "../lib/pocketbase";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const skills = ["React", "JavaScript", "Tailwind", "Node.js"];
+
+const pbUrl = defaultPbUrl;
+
+const groupedCompetences = await fetchCompetenceGroups(pbUrl);
+const competenceOrder = [
+	"Frontend Development",
+	"Backend & API",
+	"Performance & SEO",
+	"Outils & Gestion",
+];
+const orderedCompetences = [
+	...competenceOrder
+		.filter((cat) => groupedCompetences[cat])
+		.map((cat) => [cat, groupedCompetences[cat]] as const),
+	...Object.entries(groupedCompetences).filter(
+		([cat]) => !competenceOrder.includes(cat),
+	),
+];
+
+const project: ProjectWithAssets = await fetchLatestProject(pbUrl);
+const projectData = project;
+const projectCover = project.coverUrl ?? null;
+const projectTags = project.tags ?? ["Astro", "TailwindCSS", "PocketBase"];
 ---
 
 <Layout>
-	<Welcome />
+	<section
+		id="hero"
+		class="relative isolate overflow-hidden bg-gradient-to-br from-[#050d1f] via-[#020817] to-[#020817] px-6 pb-32 pt-24 text-white"
+	>
+		<div class="pointer-events-none absolute inset-0 opacity-70">
+			<div
+				class="absolute -left-32 top-10 h-72 w-72 rounded-full bg-emerald-500/20 blur-[120px]"
+			>
+			</div>
+			<div
+				class="absolute right-0 top-20 h-80 w-80 rounded-full bg-blue-500/10 blur-[150px]"
+			>
+			</div>
+			<div
+				class="absolute bottom-0 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-cyan-400/10 blur-[120px]"
+			>
+			</div>
+		</div>
+
+		<div
+			class="mx-auto flex max-w-6xl flex-col items-center gap-16 md:flex-row md:items-start"
+		>
+			<div class="relative z-10 flex-1 text-center md:text-left">
+				<span
+					class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70"
+				>
+					<div class="h-2 w-2 rounded-full bg-emerald-400"></div>
+					Étudiant en BUT MMI • Développeur web
+				</span>
+
+				<h1
+					class="mt-6 text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl"
+				>
+					Je suis
+					<span
+						class="bg-gradient-to-r from-emerald-400 to-emerald-500 bg-clip-text text-transparent"
+						>Ethan Touitou</span
+					>
+					étudiant en
+					<span
+						class="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent"
+						>BUT MMI</span
+					>
+				</h1>
+
+				<p class="mt-6 max-w-2xl text-base text-white/70 sm:text-lg">
+					Étudiant à Montbéliard en Métiers du Multimédia et de
+					l'Internet, spécialisé en développement web avec une passion
+					pour les interfaces modernes, accessibles et intuitives.
+				</p>
+
+				<div class="mt-10 flex flex-wrap items-center gap-4">
+					<a
+						href="#projects"
+						class="inline-flex items-center justify-center rounded-2xl bg-emerald-500 px-6 py-3 text-base font-semibold text-[#020817] transition hover:bg-emerald-400"
+					>
+						Découvrir mes projets
+					</a>
+					<a
+						href="#contact"
+						class="inline-flex items-center justify-center rounded-2xl border border-white/10 px-6 py-3 text-base font-medium text-white/80 transition hover:border-white/30 hover:text-white"
+					>
+						Me contacter
+					</a>
+					<a
+						href="/cv.pdf"
+						class="inline-flex items-center justify-center gap-2 rounded-2xl border border-emerald-500/40 bg-emerald-500/5 px-6 py-3 text-base font-semibold text-emerald-300 transition hover:border-emerald-400 hover:bg-emerald-500/10"
+					>
+						<svg
+							width="18"
+							height="18"
+							viewBox="0 0 24 24"
+							fill="none"
+							class="text-emerald-300"
+						>
+							<path
+								d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"
+								stroke="currentColor"
+								stroke-width="1.8"
+								stroke-linecap="round"
+								stroke-linejoin="round"></path>
+						</svg>
+						Mon CV
+					</a>
+				</div>
+			</div>
+
+			<div class="relative z-10 flex-1">
+				<div
+					class="relative transition-transform duration-700 ease-in-out will-change-transform motion-safe:hover:-translate-y-1"
+				>
+					<div
+						class="relative overflow-hidden rounded-[32px] border border-white/10 bg-[rgba(4,10,27,0.85)] p-10 shadow-[0_40px_80px_rgba(2,8,23,0.75)] backdrop-blur-3xl"
+					>
+						<div
+							class="pointer-events-none absolute inset-1 rounded-[30px] border border-white/5"
+						>
+						</div>
+						<div
+							class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.15),transparent_55%),radial-gradient(circle_at_80%_10%,rgba(59,130,246,0.12),transparent_45%)]"
+							aria-hidden="true"
+						>
+						</div>
+
+						<div
+							class="flex items-center justify-between text-[11px] uppercase tracking-[0.35em] text-white/40"
+						>
+							<span>// skillset</span>
+							<span
+								class="inline-flex items-center gap-2 tracking-normal"
+							>
+								<span
+									class="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.9)] animate-pulse"
+								></span>
+								Live
+							</span>
+						</div>
+
+						<div
+							class="mt-6 font-mono text-[0.95rem] leading-relaxed text-white/90"
+						>
+							<span class="text-emerald-400 font-semibold"
+								>const</span
+							>
+							<span class="ml-1 font-semibold text-white"
+								>skills</span
+							>
+							<span class="text-white/70">= [</span>
+						</div>
+
+						<ul class="mt-4 mb-4 flex flex-col gap-3">
+							{
+								skills.map((skill, index) => (
+									<li class="flex items-center gap-3 font-mono text-[0.95rem] text-slate-200/90">
+										<span class="text-[0.7rem] tracking-[0.15em] text-slate-400/80">
+											{index.toString().padStart(2, "0")}
+										</span>
+										<span class="h-2.5 w-2.5 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 shadow-[0_0_12px_rgba(45,212,191,0.6)] motion-safe:animate-pulse" />
+										<span class="text-sky-100">
+											&apos;{skill}&apos;
+										</span>
+										,
+									</li>
+								))
+							}
+						</ul>
+
+						<div class="font-mono text-[0.95rem] text-emerald-200">
+							];
+						</div>
+
+						<div
+							class="mt-8 font-mono text-[0.95rem] leading-relaxed text-blue-300"
+						>
+							<span class="font-semibold text-blue-300"
+								>function</span
+							>
+							<span class="ml-1 text-blue-400">develop()</span>
+							{"{"}
+							<div class="pl-4 text-white/80">
+								return &apos;innovation&apos;;
+							</div>
+							{"}"}
+						</div>
+					</div>
+
+					<span
+						class="pointer-events-none absolute -right-4 top-10 h-3.5 w-3.5 rounded-full bg-emerald-400/90 shadow-[0_0_16px_rgba(16,185,129,0.8)] motion-safe:animate-pulse"
+					></span>
+					<span
+						class="pointer-events-none absolute -left-6 bottom-10 h-4 w-4 rounded-full bg-blue-500/80 shadow-[0_0_20px_rgba(59,130,246,0.7)] motion-safe:animate-pulse"
+					></span>
+				</div>
+			</div>
+		</div>
+
+		<div
+			class="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-gradient-to-b from-transparent via-[#030b1e] to-[#030b1e]"
+		>
+		</div>
+
+		<div
+			class="pointer-events-none absolute bottom-12 left-1/2 hidden -translate-x-1/2 opacity-70 md:block"
+		>
+			<div class="h-10 w-10 rounded-full border border-white/20"></div>
+		</div>
+	</section>
+
+	<section
+		id="skills"
+		class="relative isolate bg-[#0b1222] px-6 py-16 text-white"
+	>
+		<div class="pointer-events-none absolute inset-0 opacity-40">
+			<div class="absolute left-8 top-0 h-48 w-48 rounded-full bg-emerald-500/10 blur-[120px]"></div>
+			<div class="absolute right-12 bottom-0 h-56 w-56 rounded-full bg-blue-500/10 blur-[140px]"></div>
+		</div>
+
+		<div class="relative mx-auto max-w-6xl space-y-10">
+			<div class="text-center space-y-3">
+				<h2 class="text-3xl font-semibold sm:text-4xl">
+					Compétences techniques <span class="text-emerald-400">détaillées</span>
+				</h2>
+				<p class="text-base text-white/70">
+					Un aperçu complet de mes compétences techniques et de mon niveau d'expertise dans chaque domaine.
+				</p>
+				<div class="mt-4 flex items-center justify-center gap-6 text-sm text-white/70">
+					<span class="inline-flex items-center gap-2">
+						<span class="h-2 w-2 rounded-full bg-emerald-400"></span> Avancé
+					</span>
+					<span class="inline-flex items-center gap-2">
+						<span class="h-2 w-2 rounded-full bg-blue-400"></span> Débutant
+					</span>
+				</div>
+			</div>
+
+			<div class="grid gap-10 md:grid-cols-2">
+				{orderedCompetences.map(([category, items], idx) => (
+					<div class="relative flex gap-4 rounded-2xl border border-white/5 bg-white/5 p-5 shadow-[0_18px_60px_rgba(2,8,23,0.55)]">
+						<div class="mt-1 w-1 rounded-full bg-emerald-500/90"></div>
+						<div class="space-y-3">
+							<div class="flex items-center gap-2">
+								<span class="text-lg">{idx === 0 ? "💻" : idx === 1 ? "🗄️" : idx === 2 ? "⚡" : "🛠️"}</span>
+								<h3 class="text-base font-semibold text-white">{category}</h3>
+							</div>
+							<ul class="space-y-2 text-sm text-white/80">
+								{items.map((item) => (
+									<li class="flex items-center gap-2">
+										<span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+										<span>{item}</span>
+									</li>
+								))}
+							</ul>
+						</div>
+					</div>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<section class="bg-[#0c1325] px-6 py-16 text-white mb-2">
+		<div class="mx-auto max-w-6xl space-y-10 text-center">
+			<div class="space-y-3">
+				<h2 class="text-3xl font-semibold sm:text-4xl">Mes Projets</h2>
+				<p class="text-base text-white/70">
+					Découvre une première réalisation, d'autres arrivent
+					bientôt.
+				</p>
+			</div>
+
+			<div class="flex justify-center mb-15">
+				<article
+					class="flex w-full max-w-sm flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-[0_18px_60px_rgba(2,8,23,0.55)]"
+				>
+					<div class="h-44 w-full overflow-hidden bg-[#0f172a]">
+						{
+							projectCover ? (
+								<img
+									src={projectCover}
+									alt={projectData.titre}
+									class="h-full w-full object-cover"
+								/>
+							) : (
+								<div class="flex h-full items-center justify-center text-white/50">
+									Visuel du projet
+								</div>
+							)
+						}
+					</div>
+					<div class="space-y-4 px-5 py-6 text-left">
+						<div class="space-y-1">
+							<h3 class="text-lg font-semibold">
+								{projectData.titre}
+							</h3>
+							<p class="text-sm text-white/70">
+								{projectData.subtitle}
+							</p>
+						</div>
+						<div class="flex flex-wrap gap-2">
+							{
+								projectTags
+									.slice(0, 4)
+									.map((tag) => (
+										<span class="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-200">
+											{tag}
+										</span>
+									))
+							}
+						</div>
+						<div class="flex gap-3">
+							<a
+								href="/projets"
+								class="flex-1 inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-[#0a1020] transition hover:bg-emerald-400"
+							>
+								Voir le projet
+							</a>
+							<a
+								href="/projets"
+								class="inline-flex items-center justify-center rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-white/30"
+								aria-label="Voir plus de projets"
+							>
+								+
+							</a>
+						</div>
+					</div>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<section id="contact" class="bg-[#050a17] px-6 py-20 text-white pb-15">
+		<div class="mx-auto max-w-5xl space-y-12 text-center">
+			<div class="space-y-3">
+				<h2 class="text-3xl font-semibold sm:text-4xl">Contactez-moi</h2>
+				<p class="text-base text-white/70">
+					Un projet en tête ? N'hésite pas à me contacter pour en discuter.
+				</p>
+			</div>
+
+			<div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] mb-15 ">
+				<form
+					class="space-y-4 rounded-3xl border border-white/10 bg-white/5 p-6 text-left shadow-[0_20px_80px_rgba(2,8,23,0.5)]"
+				>
+					<h3 class="text-lg font-semibold">Envoyez-moi un message</h3>
+					<div class="space-y-2">
+						<label class="text-sm text-white/80" for="name">Nom complet</label>
+						<input
+							id="name"
+							name="name"
+							type="text"
+							placeholder="Votre nom"
+							class="w-full rounded-xl border border-white/10 bg-[#0b1424] px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-emerald-400 focus:outline-none"
+						/>
+					</div>
+					<div class="space-y-2">
+						<label class="text-sm text-white/80" for="email">Email</label>
+						<input
+							id="email"
+							name="email"
+							type="email"
+							placeholder="vous@email.com"
+							class="w-full rounded-xl border border-white/10 bg-[#0b1424] px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-emerald-400 focus:outline-none"
+						/>
+					</div>
+					<div class="space-y-2">
+						<label class="text-sm text-white/80" for="message">Message</label>
+						<textarea
+							id="message"
+							name="message"
+							rows="4"
+							placeholder="Décrivez votre projet ou vos besoins..."
+							class="w-full rounded-xl border border-white/10 bg-[#0b1424] px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-emerald-400 focus:outline-none"
+						></textarea>
+					</div>
+					<button
+						type="submit"
+						class="w-full rounded-xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-[#0a1020] transition hover:bg-emerald-400"
+					>
+						Envoyer le message
+					</button>
+				</form>
+
+				<div class="space-y-6 rounded-3xl border border-white/10 bg-white/5 p-6 text-left shadow-[0_20px_80px_rgba(2,8,23,0.5)]">
+					<h3 class="text-lg font-semibold">Informations de contact</h3>
+					<div class="space-y-3">
+						<div class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+							<span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300">
+								✉️
+							</span>
+							<div>
+								<p class="text-sm font-semibold">Email</p>
+								<p class="text-sm text-white/70">ethan.touitou@email.com</p>
+							</div>
+						</div>
+						<div class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+							<span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300">
+								📞
+							</span>
+							<div>
+								<p class="text-sm font-semibold">Téléphone</p>
+								<p class="text-sm text-white/70">+33 1 23 45 67 89</p>
+							</div>
+						</div>
+						<div class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+							<span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300">
+								📍
+							</span>
+							<div>
+								<p class="text-sm font-semibold">Localisation</p>
+								<p class="text-sm text-white/70">Paris, France</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="space-y-3">
+						<p class="text-sm font-semibold">Retrouvez-moi sur</p>
+						<div class="flex gap-3">
+							<a class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20" href="#">
+								in
+							</a>
+							<a class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20" href="#">
+								🐈
+							</a>
+							<a class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20" href="#">
+								↗
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section
+		id="about"
+		class="relative isolate -mt-16 overflow-hidden bg-gradient-to-b from-[#030b1e] via-[#020817] to-[#020817] px-6 pt-36 pb-24 text-white md:-mt-24 md:pt-48"
+	>
+		<div class="pointer-events-none absolute inset-0 opacity-60">
+			<div
+				class="absolute -left-10 top-12 h-48 w-48 rounded-full bg-blue-500/10 blur-[110px]"
+			>
+			</div>
+			<div
+				class="absolute right-0 bottom-0 h-56 w-56 rounded-full bg-emerald-400/10 blur-[120px]"
+			>
+			</div>
+		</div>
+
+		<div
+			class="relative mx-auto flex max-w-5xl flex-col items-center gap-12 text-center"
+		>
+			<div class="space-y-4">
+				<h2 class="text-3xl font-semibold sm:text-4xl">
+					Concevoir des expériences numériques utiles et élégantes
+				</h2>
+				<p class="mx-auto max-w-3xl text-base text-white/70 sm:text-lg">
+					Passionné par le développement web, je conçois des
+					interfaces modernes, accessibles et performantes qui créent
+					de la valeur pour les utilisateurs comme pour les équipes.
+				</p>
+			</div>
+
+			<div class="flex flex-col items-center gap-6">
+				<div class="relative">
+					<div
+						class="h-28 w-28 rounded-3xl bg-gradient-to-br from-emerald-500/30 via-blue-500/20 to-indigo-500/30 p-[2px] shadow-[0_25px_60px_rgba(2,8,23,0.9)]"
+					>
+						<div
+							class="flex h-full w-full items-center justify-center rounded-[20px] bg-[#0b1428] text-2xl font-bold text-white"
+						>
+							<img
+								src={HeroImage.src}
+								alt="Configurateur de lunettes TaVue"
+								class="h-full w-full object-cover"
+							/>
+						</div>
+					</div>
+					<span
+						class="pointer-events-none absolute -right-3 bottom-2 h-3 w-3 animate-pulse rounded-full bg-emerald-400"
+					></span>
+				</div>
+
+				<div class="space-y-4 text-left text-white/75">
+					<p>
+						Je m'appelle Ethan Touitou, étudiant en BUT Métiers du
+						Multimédia et de l'Internet (MMI) à Montbéliard. Attiré
+						par l'univers du web et du numérique, je crée des sites
+						et applications interactives en mêlant innovation,
+						design et performance.
+					</p>
+					<p>
+						Grâce à mes cours et projets, j'ai exploré le front-end
+						et le back-end, acquis des compétences en UI et en
+						gestion de projet, et pris goût aux interfaces
+						accessibles. J'aime imaginer des solutions qui rendent
+						le web plus clair, plus rapide et plus agréable à
+						utiliser.
+					</p>
+					<p>
+						Curieux et polyvalent, je multiplie les projets
+						personnels et académiques pour affûter mon sens du
+						détail, de l'analyse et de l'organisation. Mon ambition
+						: devenir développeur full stack capable de concevoir
+						des expériences numériques utiles, esthétiques et
+						responsables.
+					</p>
+				</div>
+			</div>
+
+			<div
+				class="grid w-full gap-6 rounded-3xl border border-white/5 bg-white/5 p-6 shadow-[0_25px_60px_rgba(2,8,23,0.8)] sm:grid-cols-3"
+			>
+				<div
+					class="space-y-3 rounded-2xl bg-white/0 p-4 text-left transition hover:bg-white/5"
+				>
+					<h3 class="text-lg font-semibold text-emerald-300">
+						Excellence
+					</h3>
+					<p class="text-sm text-white/70">
+						Livrer un travail soigné avec un code propre, testé et
+						maintenable.
+					</p>
+				</div>
+				<div
+					class="space-y-3 rounded-2xl bg-white/0 p-4 text-left transition hover:bg-white/5"
+				>
+					<h3 class="text-lg font-semibold text-blue-300">
+						Innovation
+					</h3>
+					<p class="text-sm text-white/70">
+						Explorer de nouvelles idées pour proposer des
+						expériences toujours plus modernes.
+					</p>
+				</div>
+				<div
+					class="space-y-3 rounded-2xl bg-white/0 p-4 text-left transition hover:bg-white/5"
+				>
+					<h3 class="text-lg font-semibold text-indigo-200">
+						Collaboration
+					</h3>
+					<p class="text-sm text-white/70">
+						Travailler en équipe, partager, et co-construire des
+						solutions impactantes.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
 </Layout>
