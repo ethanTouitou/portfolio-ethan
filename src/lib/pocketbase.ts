@@ -1,4 +1,4 @@
-export const defaultPbUrl = import.meta.env.PUBLIC_PB_URL ?? "http://127.0.0.1:8090";
+export const defaultPbUrl = import.meta.env.PUBLIC_PB_URL ?? "https://portfolio.ethantouitou.fr:443";
 
 export type CompetenceRecord = {
 	id: string;
