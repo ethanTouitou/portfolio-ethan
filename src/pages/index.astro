@@ -28,6 +28,83 @@ const orderedCompetences = [
 	),
 ];
 
+type SkillMeta = {
+	icon: string;
+	iconClass: string;
+	accentClass: string;
+	dotClass: string;
+};
+
+type SkillLevel = "advanced" | "beginner";
+
+const beginnerRegex =
+	/(?:\(|\[|\{)?(débutant|debutant|beginner)(?:\)|\]|\})?$/i;
+
+const parseSkill = (skill: string): { label: string; level: SkillLevel } => {
+	let label = skill.trim();
+	let level: SkillLevel = "advanced";
+
+	if (!label) return { label, level };
+
+	if (label.includes("|")) {
+		const [name, lvl] = label.split("|").map((part) => part.trim());
+		if (/débutant|debutant|beginner/i.test(lvl)) level = "beginner";
+		label = name;
+	}
+
+	if (label.endsWith("*")) {
+		level = "beginner";
+		label = label.slice(0, -1).trim();
+	}
+
+	if (beginnerRegex.test(label)) {
+		level = "beginner";
+		label = label
+			.replace(beginnerRegex, "")
+			.trim()
+			.replace(/[\s,-]+$/, "");
+	}
+
+	return { label, level };
+};
+
+const defaultSkillMeta: SkillMeta = {
+	icon: "OPS",
+	iconClass: "border-emerald-500/40 bg-emerald-500/10 text-emerald-200",
+	accentClass: "bg-emerald-500/60",
+	dotClass: "bg-emerald-400",
+};
+
+const skillCardMeta: Record<string, SkillMeta> = {
+	"Frontend Development": {
+		icon: "</>",
+		iconClass: "border-emerald-500/40 bg-emerald-500/10 text-emerald-200",
+		accentClass: "bg-emerald-500/70",
+		dotClass: "bg-emerald-400",
+	},
+	"Backend & API": {
+		icon: "API",
+		iconClass: "border-blue-500/40 bg-blue-500/10 text-blue-200",
+		accentClass: "bg-blue-500/70",
+		dotClass: "bg-blue-400",
+	},
+	"Performance & SEO": {
+		icon: "SEO",
+		iconClass: "border-cyan-500/40 bg-cyan-500/10 text-cyan-200",
+		accentClass: "bg-cyan-400/80",
+		dotClass: "bg-cyan-300",
+	},
+	"Outils & Gestion": {
+		icon: "OPS",
+		iconClass: "border-purple-500/40 bg-purple-500/10 text-purple-200",
+		accentClass: "bg-purple-500/70",
+		dotClass: "bg-purple-300",
+	},
+};
+
+const getSkillMeta = (category: string): SkillMeta =>
+	skillCardMeta[category] ?? defaultSkillMeta;
+
 const project: ProjectWithAssets = await fetchLatestProject(pbUrl);
 const projectData = project;
 const projectCover = project.coverUrl ?? null;
@@ -222,231 +299,6 @@ const projectTags = project.tags ?? ["Astro", "TailwindCSS", "PocketBase"];
 			<div class="h-10 w-10 rounded-full border border-white/20"></div>
 		</div>
 	</section>
-
-	<section
-		id="skills"
-		class="relative isolate bg-[#0b1222] px-6 py-16 text-white"
-	>
-		<div class="pointer-events-none absolute inset-0 opacity-40">
-			<div class="absolute left-8 top-0 h-48 w-48 rounded-full bg-emerald-500/10 blur-[120px]"></div>
-			<div class="absolute right-12 bottom-0 h-56 w-56 rounded-full bg-blue-500/10 blur-[140px]"></div>
-		</div>
-
-		<div class="relative mx-auto max-w-6xl space-y-10">
-			<div class="text-center space-y-3">
-				<h2 class="text-3xl font-semibold sm:text-4xl">
-					Compétences techniques <span class="text-emerald-400">détaillées</span>
-				</h2>
-				<p class="text-base text-white/70">
-					Un aperçu complet de mes compétences techniques et de mon niveau d'expertise dans chaque domaine.
-				</p>
-				<div class="mt-4 flex items-center justify-center gap-6 text-sm text-white/70">
-					<span class="inline-flex items-center gap-2">
-						<span class="h-2 w-2 rounded-full bg-emerald-400"></span> Avancé
-					</span>
-					<span class="inline-flex items-center gap-2">
-						<span class="h-2 w-2 rounded-full bg-blue-400"></span> Débutant
-					</span>
-				</div>
-			</div>
-
-			<div class="grid gap-10 md:grid-cols-2">
-				{orderedCompetences.map(([category, items], idx) => (
-					<div class="relative flex gap-4 rounded-2xl border border-white/5 bg-white/5 p-5 shadow-[0_18px_60px_rgba(2,8,23,0.55)]">
-						<div class="mt-1 w-1 rounded-full bg-emerald-500/90"></div>
-						<div class="space-y-3">
-							<div class="flex items-center gap-2">
-								<span class="text-lg">{idx === 0 ? "💻" : idx === 1 ? "🗄️" : idx === 2 ? "⚡" : "🛠️"}</span>
-								<h3 class="text-base font-semibold text-white">{category}</h3>
-							</div>
-							<ul class="space-y-2 text-sm text-white/80">
-								{items.map((item) => (
-									<li class="flex items-center gap-2">
-										<span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-										<span>{item}</span>
-									</li>
-								))}
-							</ul>
-						</div>
-					</div>
-				))}
-			</div>
-		</div>
-	</section>
-
-	<section class="bg-[#0c1325] px-6 py-16 text-white mb-2">
-		<div class="mx-auto max-w-6xl space-y-10 text-center">
-			<div class="space-y-3">
-				<h2 class="text-3xl font-semibold sm:text-4xl">Mes Projets</h2>
-				<p class="text-base text-white/70">
-					Découvre une première réalisation, d'autres arrivent
-					bientôt.
-				</p>
-			</div>
-
-			<div class="flex justify-center mb-15">
-				<article
-					class="flex w-full max-w-sm flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-[0_18px_60px_rgba(2,8,23,0.55)]"
-				>
-					<div class="h-44 w-full overflow-hidden bg-[#0f172a]">
-						{
-							projectCover ? (
-								<img
-									src={projectCover}
-									alt={projectData.titre}
-									class="h-full w-full object-cover"
-								/>
-							) : (
-								<div class="flex h-full items-center justify-center text-white/50">
-									Visuel du projet
-								</div>
-							)
-						}
-					</div>
-					<div class="space-y-4 px-5 py-6 text-left">
-						<div class="space-y-1">
-							<h3 class="text-lg font-semibold">
-								{projectData.titre}
-							</h3>
-							<p class="text-sm text-white/70">
-								{projectData.subtitle}
-							</p>
-						</div>
-						<div class="flex flex-wrap gap-2">
-							{
-								projectTags
-									.slice(0, 4)
-									.map((tag) => (
-										<span class="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-200">
-											{tag}
-										</span>
-									))
-							}
-						</div>
-						<div class="flex gap-3">
-							<a
-								href="/projets"
-								class="flex-1 inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-[#0a1020] transition hover:bg-emerald-400"
-							>
-								Voir le projet
-							</a>
-							<a
-								href="/projets"
-								class="inline-flex items-center justify-center rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-white/30"
-								aria-label="Voir plus de projets"
-							>
-								+
-							</a>
-						</div>
-					</div>
-				</article>
-			</div>
-		</div>
-	</section>
-
-	<section id="contact" class="bg-[#050a17] px-6 py-20 text-white pb-15">
-		<div class="mx-auto max-w-5xl space-y-12 text-center">
-			<div class="space-y-3">
-				<h2 class="text-3xl font-semibold sm:text-4xl">Contactez-moi</h2>
-				<p class="text-base text-white/70">
-					Un projet en tête ? N'hésite pas à me contacter pour en discuter.
-				</p>
-			</div>
-
-			<div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] mb-15 ">
-				<form
-					class="space-y-4 rounded-3xl border border-white/10 bg-white/5 p-6 text-left shadow-[0_20px_80px_rgba(2,8,23,0.5)]"
-				>
-					<h3 class="text-lg font-semibold">Envoyez-moi un message</h3>
-					<div class="space-y-2">
-						<label class="text-sm text-white/80" for="name">Nom complet</label>
-						<input
-							id="name"
-							name="name"
-							type="text"
-							placeholder="Votre nom"
-							class="w-full rounded-xl border border-white/10 bg-[#0b1424] px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-emerald-400 focus:outline-none"
-						/>
-					</div>
-					<div class="space-y-2">
-						<label class="text-sm text-white/80" for="email">Email</label>
-						<input
-							id="email"
-							name="email"
-							type="email"
-							placeholder="vous@email.com"
-							class="w-full rounded-xl border border-white/10 bg-[#0b1424] px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-emerald-400 focus:outline-none"
-						/>
-					</div>
-					<div class="space-y-2">
-						<label class="text-sm text-white/80" for="message">Message</label>
-						<textarea
-							id="message"
-							name="message"
-							rows="4"
-							placeholder="Décrivez votre projet ou vos besoins..."
-							class="w-full rounded-xl border border-white/10 bg-[#0b1424] px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-emerald-400 focus:outline-none"
-						></textarea>
-					</div>
-					<button
-						type="submit"
-						class="w-full rounded-xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-[#0a1020] transition hover:bg-emerald-400"
-					>
-						Envoyer le message
-					</button>
-				</form>
-
-				<div class="space-y-6 rounded-3xl border border-white/10 bg-white/5 p-6 text-left shadow-[0_20px_80px_rgba(2,8,23,0.5)]">
-					<h3 class="text-lg font-semibold">Informations de contact</h3>
-					<div class="space-y-3">
-						<div class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-							<span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300">
-								✉️
-							</span>
-							<div>
-								<p class="text-sm font-semibold">Email</p>
-								<p class="text-sm text-white/70">ethan.touitou@email.com</p>
-							</div>
-						</div>
-						<div class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-							<span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300">
-								📞
-							</span>
-							<div>
-								<p class="text-sm font-semibold">Téléphone</p>
-								<p class="text-sm text-white/70">+33 1 23 45 67 89</p>
-							</div>
-						</div>
-						<div class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-							<span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300">
-								📍
-							</span>
-							<div>
-								<p class="text-sm font-semibold">Localisation</p>
-								<p class="text-sm text-white/70">Paris, France</p>
-							</div>
-						</div>
-					</div>
-
-					<div class="space-y-3">
-						<p class="text-sm font-semibold">Retrouvez-moi sur</p>
-						<div class="flex gap-3">
-							<a class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20" href="#">
-								in
-							</a>
-							<a class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20" href="#">
-								🐈
-							</a>
-							<a class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20" href="#">
-								↗
-							</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
 	<section
 		id="about"
 		class="relative isolate -mt-16 overflow-hidden bg-gradient-to-b from-[#030b1e] via-[#020817] to-[#020817] px-6 pt-36 pb-24 text-white md:-mt-24 md:pt-48"
@@ -558,6 +410,314 @@ const projectTags = project.tags ?? ["Astro", "TailwindCSS", "PocketBase"];
 						Travailler en équipe, partager, et co-construire des
 						solutions impactantes.
 					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section
+		id="projects"
+		class="relative isolate bg-gradient-to-b from-[#020817] via-[#071326] to-[#071326] px-6 py-16 text-white"
+	>
+		<div class="pointer-events-none absolute inset-0 opacity-40">
+			<div class="absolute -left-10 top-0 h-56 w-56 rounded-full bg-emerald-500/10 blur-[150px]"></div>
+			<div class="absolute right-0 bottom-0 h-64 w-64 rounded-full bg-blue-500/10 blur-[160px]"></div>
+		</div>
+
+		<div class="relative mx-auto max-w-6xl space-y-10 text-center">
+			<div class="space-y-3">
+				<h2 class="text-3xl font-semibold sm:text-4xl">Mes Projets</h2>
+				<p class="text-base text-white/70">
+					Découvre une première réalisation, d'autres arrivent
+					bientôt.
+				</p>
+			</div>
+
+			<div class="flex justify-center">
+				<article
+					class="flex w-full max-w-sm flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-[0_18px_60px_rgba(2,8,23,0.55)]"
+				>
+					<div class="h-44 w-full overflow-hidden bg-[#0f172a]">
+						{
+							projectCover ? (
+								<img
+									src={projectCover}
+									alt={projectData.titre}
+									class="h-full w-full object-cover"
+								/>
+							) : (
+								<div class="flex h-full items-center justify-center text-white/50">
+									Visuel du projet
+								</div>
+							)
+						}
+					</div>
+					<div class="space-y-4 px-5 py-6 text-left">
+						<div class="space-y-1">
+							<h3 class="text-lg font-semibold">
+								{projectData.titre}
+							</h3>
+							<p class="text-sm text-white/70">
+								{projectData.subtitle}
+							</p>
+						</div>
+						<div class="flex flex-wrap gap-2">
+							{
+								projectTags
+									.slice(0, 4)
+									.map((tag) => (
+										<span class="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-200">
+											{tag}
+										</span>
+									))
+							}
+						</div>
+						<div class="flex gap-3">
+							<a
+								href="/projets"
+								class="flex-1 inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-[#0a1020] transition hover:bg-emerald-400"
+							>
+								Voir le projet
+							</a>
+							<a
+								href="/projets"
+								class="inline-flex items-center justify-center rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-white/30"
+								aria-label="Voir plus de projets"
+							>
+								+
+							</a>
+						</div>
+					</div>
+				</article>
+			</div>
+		</div>
+	</section>
+	<section
+		id="skills"
+		class="relative isolate bg-gradient-to-b from-[#071326] via-[#050f1f] to-[#050a17] px-6 py-16 text-white"
+	>
+		<div class="pointer-events-none absolute inset-0 opacity-40">
+			<div
+				class="absolute left-8 top-0 h-48 w-48 rounded-full bg-emerald-500/10 blur-[120px]"
+			>
+			</div>
+			<div
+				class="absolute right-12 bottom-0 h-56 w-56 rounded-full bg-blue-500/10 blur-[140px]"
+			>
+			</div>
+		</div>
+
+		<div class="relative mx-auto max-w-6xl space-y-10">
+			<div class="text-center space-y-3">
+				<h2 class="text-3xl font-semibold sm:text-4xl">
+					Compétences techniques <span class="text-emerald-400"
+						>détaillées</span
+					>
+				</h2>
+				<p class="text-base text-white/70">
+					Un aperçu complet de mes compétences techniques et de mon
+					niveau d'expertise dans chaque domaine.
+				</p>
+			</div>
+
+			<div class="grid gap-8 md:grid-cols-2">
+				{
+					orderedCompetences.map(([category, items]) => {
+						const meta = getSkillMeta(category);
+						return (
+							<article class="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#050a16] via-[#050b18] to-[#080f1e] p-6 shadow-[0_25px_80px_rgba(2,8,23,0.55)]">
+								<div
+									class={`absolute inset-y-6 left-0 w-1 rounded-full ${meta.accentClass}`}
+								/>
+								<div class="relative flex flex-col gap-4 pl-4">
+									<div class="flex items-center gap-4">
+										<span
+											class={`flex h-12 w-12 items-center justify-center rounded-2xl border text-base font-semibold tracking-wide ${meta.iconClass}`}
+										>
+											{meta.icon}
+										</span>
+										<div>
+											<p class="text-xs uppercase tracking-[0.25em] text-white/40">
+												Expertise
+											</p>
+											<h3 class="text-lg font-semibold text-white">
+												{category}
+											</h3>
+										</div>
+									</div>
+									<ul class="space-y-2 text-sm text-white/80">
+										{items.map((item) => {
+											const { label, level } =
+												parseSkill(item);
+											if (!label) return null;
+											return (
+												<li class="flex items-center gap-3">
+													<span
+														class={`h-1.5 w-1.5 rounded-full ${level === "beginner" ? "bg-blue-400" : meta.dotClass}`}
+													/>
+													<span>{label}</span>
+												</li>
+											);
+										})}
+									</ul>
+								</div>
+							</article>
+						);
+					})
+				}
+			</div>
+		</div>
+	</section>
+
+	<section
+		id="contact"
+		class="relative isolate bg-gradient-to-b from-[#050a17] via-[#030712] to-[#010309] px-6 py-20 text-white"
+	>
+		<div class="pointer-events-none absolute inset-0 opacity-40">
+			<div class="absolute left-0 top-0 h-56 w-56 rounded-full bg-emerald-500/10 blur-[150px]"></div>
+			<div class="absolute right-0 bottom-0 h-64 w-64 rounded-full bg-blue-500/10 blur-[160px]"></div>
+		</div>
+
+		<div class="relative mx-auto max-w-5xl space-y-12 text-center">
+			<div class="space-y-3">
+				<h2 class="text-3xl font-semibold sm:text-4xl">
+					Contactez-moi
+				</h2>
+				<p class="text-base text-white/70">
+					Un projet en tête ? N'hésite pas à me contacter pour en
+					discuter.
+				</p>
+			</div>
+
+			<div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] mb-15">
+				<form
+					class="space-y-4 rounded-3xl border border-white/10 bg-white/5 p-6 text-left shadow-[0_20px_80px_rgba(2,8,23,0.5)]"
+				>
+					<h3 class="text-lg font-semibold">
+						Envoyez-moi un message
+					</h3>
+					<div class="space-y-2">
+						<label class="text-sm text-white/80" for="name"
+							>Nom complet</label
+						>
+						<input
+							id="name"
+							name="name"
+							type="text"
+							placeholder="Votre nom"
+							class="w-full rounded-xl border border-white/10 bg-[#0b1424] px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-emerald-400 focus:outline-none"
+						/>
+					</div>
+					<div class="space-y-2">
+						<label class="text-sm text-white/80" for="email"
+							>Email</label
+						>
+						<input
+							id="email"
+							name="email"
+							type="email"
+							placeholder="vous@email.com"
+							class="w-full rounded-xl border border-white/10 bg-[#0b1424] px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-emerald-400 focus:outline-none"
+						/>
+					</div>
+					<div class="space-y-2">
+						<label class="text-sm text-white/80" for="message"
+							>Message</label
+						>
+						<textarea
+							id="message"
+							name="message"
+							rows="4"
+							placeholder="Décrivez votre projet ou vos besoins..."
+							class="w-full rounded-xl border border-white/10 bg-[#0b1424] px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-emerald-400 focus:outline-none"
+						></textarea>
+					</div>
+					<button
+						type="submit"
+						class="w-full rounded-xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-[#0a1020] transition hover:bg-emerald-400"
+					>
+						Envoyer le message
+					</button>
+				</form>
+
+				<div
+					class="space-y-6 rounded-3xl border border-white/10 bg-white/5 p-6 text-left shadow-[0_20px_80px_rgba(2,8,23,0.5)]"
+				>
+					<h3 class="text-lg font-semibold">
+						Informations de contact
+					</h3>
+					<div class="space-y-3">
+						<div
+							class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
+						>
+							<span
+								class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300"
+							>
+								✉️
+							</span>
+							<div>
+								<p class="text-sm font-semibold">Email</p>
+								<p class="text-sm text-white/70">
+									ethan.touitou@email.com
+								</p>
+							</div>
+						</div>
+						<div
+							class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
+						>
+							<span
+								class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300"
+							>
+								📞
+							</span>
+							<div>
+								<p class="text-sm font-semibold">Téléphone</p>
+								<p class="text-sm text-white/70">
+									+33 1 23 45 67 89
+								</p>
+							</div>
+						</div>
+						<div
+							class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
+						>
+							<span
+								class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300"
+							>
+								📍
+							</span>
+							<div>
+								<p class="text-sm font-semibold">
+									Localisation
+								</p>
+								<p class="text-sm text-white/70">
+									Paris, France
+								</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="space-y-3">
+						<p class="text-sm font-semibold">Retrouvez-moi sur</p>
+						<div class="flex gap-3">
+							<a
+								class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20"
+								href="#"
+							>
+								in
+							</a>
+							<a
+								class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20"
+								href="#"
+							>
+								🐈
+							</a>
+							<a
+								class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20"
+								href="#"
+							>
+								↗
+							</a>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

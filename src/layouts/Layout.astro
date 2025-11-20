@@ -2,12 +2,14 @@
 import "../styles/global.css";
 
 const navLinks = [
-	{ label: "Accueil", href: "#hero" },
-	{ label: "Projets", href: "#projects" },
-	{ label: "Compétences", href: "#skills" },
-	{ label: "À propos", href: "#about" },
-	{ label: "Contact", href: "#contact" },
+	{ label: "Accueil", href: "/#hero" },
+	{ label: "Projets", href: "/#projects" },
+	{ label: "Compétences", href: "/#skills" },
+	{ label: "À propos", href: "/#about" },
+	{ label: "Contact", href: "/#contact" },
 ];
+
+const currentYear = new Date().getFullYear();
 ---
 
 <!doctype html>
@@ -27,7 +29,7 @@ const navLinks = [
 				class="mx-auto flex h-20 w-full max-w-6xl items-center justify-between px-6"
 			>
 				<a
-					href="#hero"
+					href="/#hero"
 					class="flex items-center gap-3 text-sm font-semibold tracking-wide"
 				>
 					<span
@@ -53,32 +55,187 @@ const navLinks = [
 					}
 				</nav>
 
+				<div class="flex items-center gap-3">
+					<a
+						href="/cv.pdf"
+						class="hidden items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-[#020817] transition hover:bg-emerald-400 sm:inline-flex"
+					>
+						<svg
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+							class="text-[#020817]"
+						>
+							<path
+								d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"
+								stroke="currentColor"
+								stroke-width="1.8"
+								stroke-linecap="round"
+								stroke-linejoin="round"></path>
+						</svg>
+						<span>CV</span>
+					</a>
+					<button
+						type="button"
+						class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white transition hover:border-white/40 md:hidden"
+						aria-label="Ouvrir le menu"
+						aria-expanded="false"
+						data-mobile-toggle
+					>
+						<span class="sr-only">Menu</span>
+						<span class="flex h-4 w-4 flex-col justify-between">
+							<span class="h-0.5 w-full rounded bg-white"></span>
+							<span class="h-0.5 w-full rounded bg-white"></span>
+							<span class="h-0.5 w-full rounded bg-white"></span>
+						</span>
+					</button>
+				</div>
+			</div>
+		</header>
+
+		<div
+			class="fixed inset-0 z-40 bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300 md:hidden"
+			data-mobile-overlay
+		>
+		</div>
+		<div
+			class="fixed inset-y-0 right-0 z-50 w-72 translate-x-full bg-[#040b1c] px-6 py-8 shadow-[0_20px_60px_rgba(2,8,23,0.8)] transition-transform duration-300 md:hidden"
+			data-mobile-menu
+		>
+			<div class="flex items-center justify-between">
 				<a
-					href="/cv.pdf"
-					class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-[#020817] transition hover:bg-emerald-400"
+					href="/#hero"
+					class="flex items-center gap-3 text-sm font-semibold tracking-wide"
+				>
+					<span
+						class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 text-sm text-[#020817] font-bold"
+					>
+						ET
+					</span>
+					<span class="text-white/80">Ethan Touitou</span>
+				</a>
+				<button
+					type="button"
+					class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 text-white"
+					aria-label="Fermer le menu"
+					data-mobile-close
 				>
 					<svg
-						width="16"
-						height="16"
+						width="18"
+						height="18"
 						viewBox="0 0 24 24"
 						fill="none"
 						xmlns="http://www.w3.org/2000/svg"
-						class="text-[#020817]"
 					>
 						<path
-							d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"
+							d="M6 6l12 12M6 18 18 6"
 							stroke="currentColor"
 							stroke-width="1.8"
 							stroke-linecap="round"
 							stroke-linejoin="round"></path>
 					</svg>
-					<span>CV</span>
-				</a>
+				</button>
 			</div>
-		</header>
+			<nav class="mt-10 flex flex-col gap-4 text-base text-white/80">
+				{
+					navLinks.map((link) => (
+						<a
+							href={link.href}
+							class="rounded-2xl border border-white/5 px-4 py-3 transition hover:border-white/30"
+							data-mobile-link
+						>
+							{link.label}
+						</a>
+					))
+				}
+			</nav>
+			<a
+				href="/cv.pdf"
+				class="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-[#020817] transition hover:bg-emerald-400"
+				data-mobile-link
+			>
+				Télécharger mon CV
+			</a>
+		</div>
 
 		<main class="pt-24">
 			<slot />
 		</main>
+
+		<footer
+			class="border-t border-white/10 bg-[#05080f] py-6 text-sm text-white/70"
+		>
+			<div
+				class="mx-auto flex w-full max-w-6xl flex-col items-center gap-4 px-6 text-center md:flex-row md:justify-between md:text-left"
+			>
+				<a
+					href="/#hero"
+					class="flex items-center gap-3 text-sm font-semibold tracking-wide text-white/90"
+				>
+					<span
+						class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 text-sm font-bold text-[#020817]"
+					>
+						ET
+					</span>
+					<span class="text-white/80">Ethan Touitou</span>
+				</a>
+
+				<p class="text-white/60">
+					&copy; {currentYear} Ethan Touitou. Tous droits réservés.
+				</p>
+			</div>
+		</footer>
+
+		<script is:inline>
+			const initMobileMenu = () => {
+				const toggle = document.querySelector("[data-mobile-toggle]");
+				const menu = document.querySelector("[data-mobile-menu]");
+				const overlay = document.querySelector("[data-mobile-overlay]");
+				const closeBtn = document.querySelector("[data-mobile-close]");
+				const links = document.querySelectorAll("[data-mobile-link]");
+
+				const openMenu = () => {
+					menu?.classList.remove("translate-x-full");
+					overlay?.classList.remove("pointer-events-none");
+					overlay?.classList.remove("opacity-0");
+					overlay?.classList.add("opacity-100");
+					toggle?.setAttribute("aria-expanded", "true");
+				};
+
+				const closeMenu = () => {
+					menu?.classList.add("translate-x-full");
+					overlay?.classList.add("pointer-events-none");
+					overlay?.classList.remove("opacity-100");
+					overlay?.classList.add("opacity-0");
+					toggle?.setAttribute("aria-expanded", "false");
+				};
+
+				toggle?.addEventListener("click", () => {
+					if (menu?.classList.contains("translate-x-full")) {
+						openMenu();
+					} else {
+						closeMenu();
+					}
+				});
+
+				overlay?.addEventListener("click", closeMenu);
+				closeBtn?.addEventListener("click", closeMenu);
+				links.forEach((link) =>
+					link.addEventListener("click", () => {
+						setTimeout(closeMenu, 100);
+					}),
+				);
+			};
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", initMobileMenu, {
+					once: true,
+				});
+			} else {
+				initMobileMenu();
+			}
+		</script>
 	</body>
 </html>

@@ -3,6 +3,7 @@ export const defaultPbUrl = import.meta.env.PUBLIC_PB_URL ?? "https://portfolio.
 export type CompetenceRecord = {
 	id: string;
 	Competance?: string;
+	titre?: string;
 	category?: string;
 	niveau?: string;
 };
@@ -103,9 +104,10 @@ export async function fetchCompetenceGroups(pbUrl: string = defaultPbUrl) {
 		const items = (data?.items ?? []) as CompetenceRecord[];
 		if (!items.length) return fallbackCompetences;
 		return items.reduce((acc, item) => {
-			const cat = item.category || "Autres";
+			const cat = item.titre || item.category || "Autres";
 			if (!acc[cat]) acc[cat] = [];
-			if (item.Competance) acc[cat].push(item.Competance);
+			const skills = item.Competance?.split(",").map((skill) => skill.trim()).filter(Boolean);
+			if (skills?.length) acc[cat].push(...skills);
 			return acc;
 		}, {} as Record<string, string[]>);
 	} catch {
