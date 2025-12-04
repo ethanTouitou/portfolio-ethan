@@ -1,12 +1,13 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import HeroImage from "../assets/ethantouitou.webp";
+import AvatarImage from "../assets/avatar.png";
 import {
 	fetchCompetenceGroups,
 	fetchLatestProject,
 	defaultPbUrl,
 	ProjectWithAssets,
 } from "../lib/pocketbase";
+import GithubIcon from "../assets/github.webp";
 
 const skills = ["React", "JavaScript", "Tailwind", "Node.js"];
 
@@ -337,8 +338,8 @@ const projectTags = project.tags ?? ["Astro", "TailwindCSS", "PocketBase"];
 							class="flex h-full w-full items-center justify-center rounded-[20px] bg-[#0b1428] text-2xl font-bold text-white"
 						>
 							<img
-								src={HeroImage.src}
-								alt="Configurateur de lunettes TaVue"
+								src={AvatarImage.src ?? AvatarImage}
+								alt="Avatar d'Ethan Touitou"
 								class="h-full w-full object-cover"
 							/>
 						</div>
@@ -419,8 +420,14 @@ const projectTags = project.tags ?? ["Astro", "TailwindCSS", "PocketBase"];
 		class="relative isolate bg-gradient-to-b from-[#020817] via-[#071326] to-[#071326] px-6 py-16 text-white"
 	>
 		<div class="pointer-events-none absolute inset-0 opacity-40">
-			<div class="absolute -left-10 top-0 h-56 w-56 rounded-full bg-emerald-500/10 blur-[150px]"></div>
-			<div class="absolute right-0 bottom-0 h-64 w-64 rounded-full bg-blue-500/10 blur-[160px]"></div>
+			<div
+				class="absolute -left-10 top-0 h-56 w-56 rounded-full bg-emerald-500/10 blur-[150px]"
+			>
+			</div>
+			<div
+				class="absolute right-0 bottom-0 h-64 w-64 rounded-full bg-blue-500/10 blur-[160px]"
+			>
+			</div>
 		</div>
 
 		<div class="relative mx-auto max-w-6xl space-y-10 text-center">
@@ -473,21 +480,36 @@ const projectTags = project.tags ?? ["Astro", "TailwindCSS", "PocketBase"];
 						</div>
 						<div class="flex gap-3">
 							<a
-								href="/projets"
+								href="/emminant/"
 								class="flex-1 inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-[#0a1020] transition hover:bg-emerald-400"
 							>
 								Voir le projet
 							</a>
 							<a
-								href="/projets"
+								href="/emminant/"
 								class="inline-flex items-center justify-center rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-white/30"
 								aria-label="Voir plus de projets"
 							>
-								+
+								<img
+									src={GithubIcon.src ?? GithubIcon}
+									alt="GitHub"
+									class="h-4 w-4 object-contain"
+									loading="lazy"
+								/>
 							</a>
 						</div>
 					</div>
 				</article>
+			</div>
+
+			<div class="flex justify-center">
+				<a
+					href="/projets/"
+					class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/10"
+				>
+					Voir tous mes projets
+					<span aria-hidden="true">↗</span>
+				</a>
 			</div>
 		</div>
 	</section>
@@ -573,8 +595,14 @@ const projectTags = project.tags ?? ["Astro", "TailwindCSS", "PocketBase"];
 		class="relative isolate bg-gradient-to-b from-[#050a17] via-[#030712] to-[#010309] px-6 py-20 text-white"
 	>
 		<div class="pointer-events-none absolute inset-0 opacity-40">
-			<div class="absolute left-0 top-0 h-56 w-56 rounded-full bg-emerald-500/10 blur-[150px]"></div>
-			<div class="absolute right-0 bottom-0 h-64 w-64 rounded-full bg-blue-500/10 blur-[160px]"></div>
+			<div
+				class="absolute left-0 top-0 h-56 w-56 rounded-full bg-emerald-500/10 blur-[150px]"
+			>
+			</div>
+			<div
+				class="absolute right-0 bottom-0 h-64 w-64 rounded-full bg-blue-500/10 blur-[160px]"
+			>
+			</div>
 		</div>
 
 		<div class="relative mx-auto max-w-5xl space-y-12 text-center">
@@ -590,8 +618,16 @@ const projectTags = project.tags ?? ["Astro", "TailwindCSS", "PocketBase"];
 
 			<div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] mb-15">
 				<form
+					id="contactForm"
+					action="https://formspree.io/f/xyzrpgey"
+					method="POST"
 					class="space-y-4 rounded-3xl border border-white/10 bg-white/5 p-6 text-left shadow-[0_20px_80px_rgba(2,8,23,0.5)]"
 				>
+					<input
+						type="hidden"
+						name="_subject"
+						value="Nouveau message depuis le portfolio"
+					/>
 					<h3 class="text-lg font-semibold">
 						Envoyez-moi un message
 					</h3>
@@ -637,6 +673,13 @@ const projectTags = project.tags ?? ["Astro", "TailwindCSS", "PocketBase"];
 					>
 						Envoyer le message
 					</button>
+					<p
+						id="formStatus"
+						class="hidden text-sm text-white/70"
+						role="status"
+						aria-live="polite"
+					>
+					</p>
 				</form>
 
 				<div
@@ -700,15 +743,20 @@ const projectTags = project.tags ?? ["Astro", "TailwindCSS", "PocketBase"];
 						<div class="flex gap-3">
 							<a
 								class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20"
-								href="#"
+								href="https://www.linkedin.com/in/ethan-touitou-77070029b/"
 							>
 								in
 							</a>
 							<a
 								class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20"
-								href="#"
+								href="https://github.com/ethanTouitou"
 							>
-								🐈
+								<img
+									src={GithubIcon.src ?? GithubIcon}
+									alt="GitHub"
+									class="h-5 w-5 object-contain"
+									loading="lazy"
+								/>
 							</a>
 							<a
 								class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20"
@@ -722,4 +770,43 @@ const projectTags = project.tags ?? ["Astro", "TailwindCSS", "PocketBase"];
 			</div>
 		</div>
 	</section>
+
+	<script is:inline>
+		const form = document.querySelector("#contactForm");
+		const status = document.querySelector("#formStatus");
+
+		form?.addEventListener("submit", async (event) => {
+			event.preventDefault();
+			if (!form) return;
+
+			status?.classList.remove("hidden");
+			if (status) status.textContent = "Envoi...";
+
+			const data = new FormData(form);
+
+			try {
+				const response = await fetch(form.action, {
+					method: "POST",
+					body: data,
+					headers: {
+						Accept: "application/json",
+					},
+				});
+
+				if (response.ok) {
+					if (status)
+						status.textContent =
+							"Merci, ton message a bien été envoyé !";
+					form.reset();
+				} else {
+					if (status)
+						status.textContent =
+							"Erreur d'envoi, merci de réessayer.";
+				}
+			} catch (error) {
+				if (status)
+					status.textContent = "Impossible d'envoyer pour le moment.";
+			}
+		});
+	</script>
 </Layout>
