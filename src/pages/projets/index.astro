@@ -9,6 +9,7 @@ const projects = await fetchProjects(pbUrl, 24);
 <Layout>
 	<section
 		class="relative isolate overflow-hidden bg-gradient-to-b from-[#050d1f] via-[#020817] to-[#010309] px-6 py-20 text-white"
+		data-animate
 	>
 		<div class="pointer-events-none absolute inset-0 opacity-40">
 			<div class="absolute left-0 top-0 h-56 w-56 rounded-full bg-emerald-500/10 blur-[150px]"></div>
@@ -26,7 +27,7 @@ const projects = await fetchProjects(pbUrl, 24);
 				</p>
 			</div>
 
-			<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+			<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-animate data-animate-delay="120ms">
 				{
 					projects.map((project) => (
 						<article

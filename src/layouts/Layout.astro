@@ -245,6 +245,43 @@ const currentYear = new Date().getFullYear();
 			} else {
 				initMobileMenu();
 			}
+
+			const initScrollAnimations = () => {
+				const animated = document.querySelectorAll("[data-animate]");
+				if (!animated.length) return;
+
+				const observer = new IntersectionObserver(
+					(entries) => {
+						entries.forEach((entry) => {
+							const target = entry.target;
+							if (entry.isIntersecting) {
+								const delay = target.dataset.animateDelay || "0ms";
+								target.style.transition = "opacity 600ms ease, transform 600ms ease";
+								target.style.transitionDelay = delay;
+								target.style.opacity = "1";
+								target.style.transform = "translateY(0)";
+								observer.unobserve(target);
+							}
+						});
+					},
+					{ threshold: 0.15 },
+				);
+
+				animated.forEach((el) => {
+					const target = el;
+					target.style.opacity = "0";
+					target.style.transform = "translateY(24px)";
+					observer.observe(target);
+				});
+			};
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", initScrollAnimations, {
+					once: true,
+				});
+			} else {
+				initScrollAnimations();
+			}
 		</script>
 	</body>
 </html>
